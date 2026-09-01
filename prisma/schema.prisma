@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(cuid())
+  nama       String
+  username   String   @unique
+  password   String
+  role       String   // RT | DUKUH | OPERATOR
+  wilayahId  String?
+  wilayah    Wilayah? @relation(fields: [wilayahId], references: [id])
+  aktif      Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  laporanDibuat    LaporanWarga[]   @relation("PelaporLaporan")
+  usulanDibuat     UsulanPerubahan[] @relation("PengusulUsulan")
+  rekapDibuat      Rekap[]
+}
+
+model Wilayah {
+  id        String    @id @default(cuid())
+  nama      String
+  jenis     String    // KALURAHAN | DUKUH | RT
+  kode      String?
+  parentId  String?
+  parent    Wilayah?  @relation("WilayahHierarki", fields: [parentId], references: [id])
+  children  Wilayah[] @relation("WilayahHierarki")
+
+  users        User[]
+  kkList       KartuKeluarga[]
+  laporanWarga LaporanWarga[]
+  rekap        Rekap[]
+
+  createdAt DateTime @default(now())
+}
+
+model KartuKeluarga {
+  id              String    @id @default(cuid())
+  noKK            String    @unique
+  kepalaKeluarga  String
+  alamat          String
+  wilayahId       String
+  wilayah         Wilayah   @relation(fields: [wilayahId], references: [id])
+  anggota         Penduduk[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Penduduk {
+  id            String   @id @default(cuid())
+  nik           String   @unique
+  nama          String
+  tempatLahir   String
+  tanggalLahir  DateTime
+  jenisKelamin  String   // L | P
+  agama         String
+  pendidikan    String
+  pekerjaan     String
+  statusKawin   String   // BELUM_KAWIN | KAWIN | CERAI_HIDUP | CERAI_MATI
+  statusHidup   String   @default("HIDUP") // HIDUP | MENINGGAL
+  statusTinggal String   @default("TETAP") // TETAP | PINDAH
+  kkId          String?
+  kk            KartuKeluarga? @relation(fields: [kkId], references: [id])
+
+  laporan       LaporanWarga[]
+  usulan        UsulanPerubahan[]
+  bansos        DataBansos[]
+  bpjs          DataBPJS[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LaporanWarga {
+  id          String   @id @default(cuid())
+  jenis       String   // BARU | LAHIR | PINDAH | MENINGGAL
+  status      String   @default("PENDING") // PENDING | DIVERIFIKASI | DITOLAK
+  pendudukId  String?
+  penduduk    Penduduk? @relation(fields: [pendudukId], references: [id])
+  pelaporId   String
+  pelapor     User     @relation("PelaporLaporan", fields: [pelaporId], references: [id])
+  wilayahId   String
+  wilayah     Wilayah  @relation(fields: [wilayahId], references: [id])
+  catatan     String?
+  dataBaru    String?  // JSON string untuk data warga baru / bayi lahir
+  verifiedBy  String?
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UsulanPerubahan {
+  id          String    @id @default(cuid())
+  pendudukId  String?
+  penduduk    Penduduk? @relation(fields: [pendudukId], references: [id])
+  pengusulId  String
+  pengusul    User     @relation("PengusulUsulan", fields: [pengusulId], references: [id])
+  field       String   // nama field yang diubah, atau "UMUM" untuk bebas
+  nilaiLama   String
+  nilaiBaru   String
+  alasan      String
+  status      String   @default("PENDING") // PENDING | DISETUJUI | DITOLAK
+  verifiedBy  String?
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model DataBansos {
+  id           String   @id @default(cuid())
+  pendudukId   String
+  penduduk     Penduduk @relation(fields: [pendudukId], references: [id])
+  jenisBansos  String   // PKH | BPNT | BLT | dll
+  tahun        Int
+  semester     Int      // 1 | 2
+  nilaiManfaat Int
+  status       String   @default("AKTIF") // AKTIF | NONAKTIF
+  keterangan   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model DataBPJS {
+  id         String   @id @default(cuid())
+  pendudukId String
+  penduduk   Penduduk @relation(fields: [pendudukId], references: [id])
+  noKartu    String   @unique
+  kelas      Int      // 1 | 2 | 3
+  jenis      String   // PBI | MANDIRI | PPU
+  status     String   @default("AKTIF") // AKTIF | NONAKTIF
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Rekap {
+  id        String   @id @default(cuid())
+  wilayahId String
+  wilayah   Wilayah  @relation(fields: [wilayahId], references: [id])
+  bulan     Int
+  tahun     Int
+  jenis     String   // PENDUDUK | BANSOS | UMUM
+  data      String   // JSON
+  dibuatOleh String
+  pembuat   User     @relation(fields: [dibuatOleh], references: [id])
+  createdAt DateTime @default(now())
+}

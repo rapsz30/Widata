@@ -1,0 +1,65 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "#1E6FA8",
+          50: "#EBF4FB",
+          100: "#C8E1F3",
+          200: "#91C4E7",
+          300: "#5AA6DB",
+          400: "#2F89CF",
+          500: "#1E6FA8",
+          600: "#185A87",
+          700: "#124467",
+          800: "#0C2E47",
+          900: "#061827",
+        },
+        secondary: {
+          DEFAULT: "#2E8B57",
+          50: "#EAFAF1",
+          100: "#C3EDDA",
+          200: "#87DAB5",
+          300: "#4BC790",
+          400: "#2EB472",
+          500: "#2E8B57",
+          600: "#256F45",
+          700: "#1C5333",
+          800: "#133822",
+          900: "#091C11",
+        },
+        accent: {
+          DEFAULT: "#E87C26",
+          50: "#FEF4EA",
+          100: "#FBDCB8",
+          200: "#F7B871",
+          300: "#F3952A",
+          400: "#E87C26",
+          500: "#C4671F",
+          600: "#9F5219",
+          700: "#7A3E13",
+          800: "#55290C",
+          900: "#2B1506",
+        },
+        surface: "#FFFFFF",
+        background: "#F4F7FB",
+      },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+      },
+      borderRadius: {
+        lg: "0.5rem",
+        md: "calc(0.5rem - 2px)",
+        sm: "calc(0.5rem - 4px)",
+      },
+    },
+  },
+  plugins: [],
+};

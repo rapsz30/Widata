@@ -4,6 +4,11 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
+  secret:
+    process.env.NEXTAUTH_SECRET ||
+    process.env.AUTH_SECRET ||
+    "widata-secret-prototype-widodomartani-2026",
   providers: [
     Credentials({
       credentials: {
@@ -50,11 +55,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id as string;
-      (session.user as any).role = token.role;
-      (session.user as any).wilayahId = token.wilayahId;
-      (session.user as any).wilayahNama = token.wilayahNama;
-      (session.user as any).dukuhNama = token.dukuhNama;
+      if (session?.user) {
+        session.user.id = token.id as string;
+        (session.user as any).role = token.role;
+        (session.user as any).wilayahId = token.wilayahId;
+        (session.user as any).wilayahNama = token.wilayahNama;
+        (session.user as any).dukuhNama = token.dukuhNama;
+      }
       return session;
     },
   },

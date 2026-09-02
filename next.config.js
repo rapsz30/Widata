@@ -4,13 +4,16 @@ const path = require("path");
 const nextConfig = {
   experimental: {
     serverActions: {
-      allowedOrigins: ["localhost:3000", "localhost:3001"],
+      allowedOrigins: ["*"],
     },
   },
   turbopack: {
     root: path.resolve(__dirname),
   },
   serverExternalPackages: ["tesseract.js"],
+  outputFileTracingIncludes: {
+    "/**": ["./prisma/dev.db", "./prisma/*"],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },

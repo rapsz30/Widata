@@ -4,6 +4,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import Image from "next/image";
+import logoImg from "../../../public/logo.png";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,8 +42,7 @@ export default function LoginPage() {
         {/* Logo & Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-24 h-24 bg-white rounded-2xl shadow-lg mb-4 p-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Logo WIDATA" className="w-full h-full object-contain" />
+            <Image src={logoImg} alt="Logo WIDATA" className="w-full h-full object-contain" priority />
           </div>
           <h1 className="text-3xl font-bold text-white">WIDATA</h1>
           <p className="text-primary-100 mt-1 text-sm">
@@ -109,39 +110,6 @@ export default function LoginPage() {
               {loading ? "Memproses..." : "Masuk"}
             </button>
           </form>
-
-          {/* Demo Accounts */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <p className="text-xs text-gray-500 text-center mb-3">
-              Akun Demo Prototipe
-            </p>
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              <button
-                type="button"
-                onClick={() => { setUsername("operator"); setPassword("operator123"); }}
-                className="border border-primary-200 rounded-lg p-2 text-center hover:bg-primary-50 transition-colors"
-              >
-                <div className="font-semibold text-primary-600">Operator</div>
-                <div className="text-gray-500">operator</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => { setUsername("dukuh_ngalian"); setPassword("dukuh123"); }}
-                className="border border-secondary-200 rounded-lg p-2 text-center hover:bg-secondary-50 transition-colors"
-              >
-                <div className="font-semibold text-secondary-600">Dukuh</div>
-                <div className="text-gray-500">dukuh_ngalian</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => { setUsername("rt_00101"); setPassword("rt123"); }}
-                className="border border-accent-200 rounded-lg p-2 text-center hover:bg-accent-50 transition-colors"
-              >
-                <div className="font-semibold text-accent-500">RT</div>
-                <div className="text-gray-500">rt_00101</div>
-              </button>
-            </div>
-          </div>
         </div>
 
         <p className="text-center text-primary-200 text-xs mt-6">

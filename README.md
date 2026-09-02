@@ -123,17 +123,23 @@ Buka browser → **http://localhost:3000**
 
 ---
 
-## Akun Demo (Hasil Seed)
+## Akun Demo Default (Total 13 Akun)
 
-| Role | Username | Password | Wilayah |
-|---|---|---|---|
-| Operator Desa | `operator` | `operator123` | Kalurahan |
-| Dukuh | `dukuh_ngalian` | `dukuh123` | Ngalian |
-| Dukuh | `dukuh_kemasan` | `dukuh123` | Kemasan |
-| RT | `rt_00101` | `rt123` | RT 01 Ngalian |
-| RT | `rt_00201` | `rt123` | RT 01 Kalijeruk 2 |
-
-> Untuk daftar lengkap akun RT, lihat `prisma/seed.js`
+| No | Role | Username | Password | Wilayah |
+|---|---|---|---|---|
+| 1 | Operator Desa | `operator` | `operator123` | Kalurahan Widodomartani |
+| 2 | Dukuh | `ngalian` | `ngalian123` | Padukuhan Ngalian |
+| 3 | Dukuh | `kalijeruk2` | `kalijeruk2123` | Padukuhan Kalijeruk 2 |
+| 4 | Dukuh | `kemasan` | `kemasan123` | Padukuhan Kemasan |
+| 5 | Dukuh | `klancingan` | `klancingan123` | Padukuhan Klancingan |
+| 6 | Dukuh | `kwadungan` | `kwadungan123` | Padukuhan Kwadungan |
+| 7 | Dukuh | `pondok1` | `pondok1123` | Padukuhan Pondok 1 |
+| 8 | RT | `rt_ngalian` | `rt_ngalian123` | RT 01 Ngalian |
+| 9 | RT | `rt_kalijeruk2` | `rt_kalijeruk2123` | RT 01 Kalijeruk 2 |
+| 10 | RT | `rt_kemasan` | `rt_kemasan123` | RT 01 Kemasan |
+| 11 | RT | `rt_klancingan` | `rt_klancingan123` | RT 01 Klancingan |
+| 12 | RT | `rt_kwadungan` | `rt_kwadungan123` | RT 01 Kwadungan |
+| 13 | RT | `rt_pondok1` | `rt_pondok1123` | RT 01 Pondok 1 |
 
 ---
 

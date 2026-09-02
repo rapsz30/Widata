@@ -58,7 +58,7 @@ export function FormUsulan() {
           </div>
         </div>
         <p className="text-xs text-gray-400 mt-2">
-          💡 Nama dan NIK bersifat opsional. Cukup jelaskan pada keterangan di bawah.
+          Nama dan NIK bersifat opsional. Cukup jelaskan pada keterangan di bawah.
         </p>
       </div>
 

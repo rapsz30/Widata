@@ -1,3 +1,5 @@
+const path = require("path");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -5,10 +7,11 @@ const nextConfig = {
       allowedOrigins: ["localhost:3000", "localhost:3001"],
     },
   },
-  turbopack: {},
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
   serverExternalPackages: ["tesseract.js"],
   typescript: {
-    // Abaikan error validator route Next.js 16 yang tidak relevan
     ignoreBuildErrors: true,
   },
 };

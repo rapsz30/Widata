@@ -18,6 +18,7 @@ export default async function OperatorValidasiPage() {
   const fieldLabels: Record<string, string> = {
     nama: "Nama", pekerjaan: "Pekerjaan", pendidikan: "Pendidikan",
     agama: "Agama", statusKawin: "Status Kawin", tempatLahir: "Tempat Lahir",
+    UMUM: "Usulan Umum",
   };
 
   return (
@@ -34,17 +35,23 @@ export default async function OperatorValidasiPage() {
                 <div key={u.id} className="border border-primary-100 bg-primary-50 rounded-xl p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="font-medium text-gray-800">{u.penduduk.nama}</p>
+                      <p className="font-medium text-gray-800">
+                        {u.penduduk?.nama ?? u.nilaiLama ?? "Usulan Perubahan Data"}
+                      </p>
                       <p className="text-xs text-gray-500 mt-0.5">
                         Diusulkan oleh: {u.pengusul.nama} · {u.pengusul.wilayah?.nama} · {u.pengusul.wilayah?.parent?.nama}
                       </p>
-                      <div className="mt-2 flex items-center gap-2 text-sm">
+                      <div className="mt-2 flex items-center gap-2 text-sm flex-wrap">
                         <span className="badge bg-gray-200 text-gray-700">{fieldLabels[u.field] ?? u.field}</span>
-                        <span className="text-red-400 line-through">{u.nilaiLama}</span>
-                        <span className="text-gray-400">→</span>
+                        {u.nilaiLama && u.penduduk && (
+                          <span className="text-red-400 line-through">{u.nilaiLama}</span>
+                        )}
+                        {u.nilaiLama && u.penduduk && <span className="text-gray-400">→</span>}
                         <span className="text-secondary-600 font-medium">{u.nilaiBaru}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1 italic">"{u.alasan}"</p>
+                      {u.alasan && (
+                        <p className="text-xs text-gray-500 mt-1 italic">"{u.alasan}"</p>
+                      )}
                     </div>
                     <div className="flex gap-2 flex-shrink-0">
                       <span className="text-xs text-gray-400">{formatDate(u.createdAt)}</span>
@@ -59,15 +66,21 @@ export default async function OperatorValidasiPage() {
         <div className="card">
           <h3 className="font-semibold text-gray-800 mb-4">Riwayat</h3>
           <div className="space-y-2">
-            {selesai.map((u) => (
-              <div key={u.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-                <div>
-                  <p className="text-sm font-medium text-gray-700">{u.penduduk.nama} — {fieldLabels[u.field] ?? u.field}</p>
-                  <p className="text-xs text-gray-400">{formatDate(u.createdAt)}</p>
+            {selesai.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-4">Belum ada riwayat validasi</p>
+            ) : (
+              selesai.map((u) => (
+                <div key={u.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">
+                      {u.penduduk?.nama ?? u.nilaiLama ?? "Usulan"} — {fieldLabels[u.field] ?? u.field}
+                    </p>
+                    <p className="text-xs text-gray-400">{formatDate(u.createdAt)}</p>
+                  </div>
+                  <StatusBadge status={u.status} />
                 </div>
-                <StatusBadge status={u.status} />
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

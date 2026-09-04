@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,146 +8,141 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  nama       String
-  username   String   @unique
-  password   String
-  role       String   // RT | DUKUH | OPERATOR
-  wilayahId  String?
-  wilayah    Wilayah? @relation(fields: [wilayahId], references: [id])
-  aktif      Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  laporanDibuat    LaporanWarga[]   @relation("PelaporLaporan")
-  usulanDibuat     UsulanPerubahan[] @relation("PengusulUsulan")
-  rekapDibuat      Rekap[]
+  id            String            @id @default(cuid())
+  nama          String
+  username      String            @unique
+  password      String
+  role          String
+  wilayahId     String?
+  aktif         Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  laporanDibuat LaporanWarga[]    @relation("PelaporLaporan")
+  rekapDibuat   Rekap[]
+  wilayah       Wilayah?          @relation(fields: [wilayahId], references: [id])
+  usulanDibuat  UsulanPerubahan[] @relation("PengusulUsulan")
 }
 
 model Wilayah {
-  id        String    @id @default(cuid())
-  nama      String
-  jenis     String    // KALURAHAN | DUKUH | RT
-  kode      String?
-  parentId  String?
-  parent    Wilayah?  @relation("WilayahHierarki", fields: [parentId], references: [id])
-  children  Wilayah[] @relation("WilayahHierarki")
-
-  users        User[]
+  id           String          @id @default(cuid())
+  nama         String
+  jenis        String
+  kode         String?
+  parentId     String?
+  createdAt    DateTime        @default(now())
   kkList       KartuKeluarga[]
   laporanWarga LaporanWarga[]
   rekap        Rekap[]
-
-  createdAt DateTime @default(now())
+  users        User[]
+  parent       Wilayah?        @relation("WilayahHierarki", fields: [parentId], references: [id])
+  children     Wilayah[]       @relation("WilayahHierarki")
 }
 
 model KartuKeluarga {
-  id              String    @id @default(cuid())
-  noKK            String    @unique
-  kepalaKeluarga  String
-  alamat          String
-  wilayahId       String
-  wilayah         Wilayah   @relation(fields: [wilayahId], references: [id])
-  anggota         Penduduk[]
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String     @id @default(cuid())
+  noKK           String     @unique
+  kepalaKeluarga String
+  alamat         String
+  wilayahId      String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  wilayah        Wilayah    @relation(fields: [wilayahId], references: [id])
+  anggota        Penduduk[]
 }
 
 model Penduduk {
-  id            String   @id @default(cuid())
-  nik           String   @unique
+  id            String            @id @default(cuid())
+  nik           String            @unique
   nama          String
   tempatLahir   String
   tanggalLahir  DateTime
-  jenisKelamin  String   // L | P
+  jenisKelamin  String
   agama         String
   pendidikan    String
   pekerjaan     String
-  statusKawin   String   // BELUM_KAWIN | KAWIN | CERAI_HIDUP | CERAI_MATI
-  statusHidup   String   @default("HIDUP") // HIDUP | MENINGGAL
-  statusTinggal String   @default("TETAP") // TETAP | PINDAH
+  statusKawin   String
+  statusHidup   String            @default("HIDUP")
+  statusTinggal String            @default("TETAP")
   kkId          String?
-  kk            KartuKeluarga? @relation(fields: [kkId], references: [id])
-
-  laporan       LaporanWarga[]
-  usulan        UsulanPerubahan[]
-  bansos        DataBansos[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   bpjs          DataBPJS[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  bansos        DataBansos[]
+  laporan       LaporanWarga[]
+  kk            KartuKeluarga?    @relation(fields: [kkId], references: [id])
+  usulan        UsulanPerubahan[]
 }
 
 model LaporanWarga {
-  id          String   @id @default(cuid())
-  jenis       String   // BARU | LAHIR | PINDAH | MENINGGAL
-  status      String   @default("PENDING") // PENDING | DIVERIFIKASI | DITOLAK
-  pendudukId  String?
-  penduduk    Penduduk? @relation(fields: [pendudukId], references: [id])
-  pelaporId   String
-  pelapor     User     @relation("PelaporLaporan", fields: [pelaporId], references: [id])
-  wilayahId   String
-  wilayah     Wilayah  @relation(fields: [wilayahId], references: [id])
-  catatan     String?
-  dataBaru    String?  // JSON string untuk data warga baru / bayi lahir
-  verifiedBy  String?
-  verifiedAt  DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String    @id @default(cuid())
+  jenis      String
+  status     String    @default("PENDING")
+  pendudukId String?
+  pelaporId  String
+  wilayahId  String
+  catatan    String?
+  dataBaru   String?
+  verifiedBy String?
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  pelapor    User      @relation("PelaporLaporan", fields: [pelaporId], references: [id])
+  penduduk   Penduduk? @relation(fields: [pendudukId], references: [id])
+  wilayah    Wilayah   @relation(fields: [wilayahId], references: [id])
 }
 
 model UsulanPerubahan {
-  id          String    @id @default(cuid())
-  pendudukId  String?
-  penduduk    Penduduk? @relation(fields: [pendudukId], references: [id])
-  pengusulId  String
-  pengusul    User     @relation("PengusulUsulan", fields: [pengusulId], references: [id])
-  field       String   // nama field yang diubah, atau "UMUM" untuk bebas
-  nilaiLama   String
-  nilaiBaru   String
-  alasan      String
-  status      String   @default("PENDING") // PENDING | DISETUJUI | DITOLAK
-  verifiedBy  String?
-  verifiedAt  DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String    @id @default(cuid())
+  pendudukId String?
+  pengusulId String
+  field      String
+  nilaiLama  String
+  nilaiBaru  String
+  alasan     String
+  status     String    @default("PENDING")
+  verifiedBy String?
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  penduduk   Penduduk? @relation(fields: [pendudukId], references: [id])
+  pengusul   User      @relation("PengusulUsulan", fields: [pengusulId], references: [id])
 }
 
 model DataBansos {
   id           String   @id @default(cuid())
   pendudukId   String
-  penduduk     Penduduk @relation(fields: [pendudukId], references: [id])
-  jenisBansos  String   // PKH | BPNT | BLT | dll
+  jenisBansos  String
   tahun        Int
-  semester     Int      // 1 | 2
+  semester     Int
   nilaiManfaat Int
-  status       String   @default("AKTIF") // AKTIF | NONAKTIF
+  status       String   @default("AKTIF")
   keterangan   String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  penduduk     Penduduk @relation(fields: [pendudukId], references: [id])
 }
 
 model DataBPJS {
   id         String   @id @default(cuid())
   pendudukId String
-  penduduk   Penduduk @relation(fields: [pendudukId], references: [id])
   noKartu    String   @unique
-  kelas      Int      // 1 | 2 | 3
-  jenis      String   // PBI | MANDIRI | PPU
-  status     String   @default("AKTIF") // AKTIF | NONAKTIF
+  kelas      Int
+  jenis      String
+  status     String   @default("AKTIF")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  penduduk   Penduduk @relation(fields: [pendudukId], references: [id])
 }
 
 model Rekap {
-  id        String   @id @default(cuid())
-  wilayahId String
-  wilayah   Wilayah  @relation(fields: [wilayahId], references: [id])
-  bulan     Int
-  tahun     Int
-  jenis     String   // PENDUDUK | BANSOS | UMUM
-  data      String   // JSON
+  id         String   @id @default(cuid())
+  wilayahId  String
+  bulan      Int
+  tahun      Int
+  jenis      String
+  data       String
   dibuatOleh String
-  pembuat   User     @relation(fields: [dibuatOleh], references: [id])
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  pembuat    User     @relation(fields: [dibuatOleh], references: [id])
+  wilayah    Wilayah  @relation(fields: [wilayahId], references: [id])
 }
